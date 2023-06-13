@@ -18,15 +18,18 @@ task fastp {
         File fastq_2
 
         Int average_qual = 30
+        Boolean disable_adaptor_trimming = true
 
         Int cpu = 4
         Int preempt = 1
     }
     String sample_name = sub(basename(fastq_1), "_1", "")
     Int disk_size = 2*ceil(size(fastq_1, "GB")) + 1
+    String arg_adaptor_trimming = "--disable_adaptor_trimming" if disable_adaptor_trimming is true else ""
 
     parameter_meta {
         average_qual: "if one read's average quality score <avg_qual, then this read/pair is discarded. 0 means no requirement"
+        disable_adaptor_trimming: "disable trimming adaptors; use this if your reads already went through trimmomatic"
     }
 
     command <<<
