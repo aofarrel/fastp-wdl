@@ -117,7 +117,7 @@ task fastp_and_parse {
     runtime {
         cpu: cpu
         disks: "local-disk " + disk_size + " SSD"
-        docker: "quay.io/staphb/fastp:0.23.2"
+        docker: "ashedpotatoes/tbfastprofiler:0.0.1"
         preemptible: preempt
     }
 
