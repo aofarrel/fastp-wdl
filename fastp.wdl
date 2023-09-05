@@ -75,7 +75,7 @@ task fastp_and_parse {
     # or inputs like sample+num (ERS457530_1.fastq). In both cases, we want to convert to just
 	# sample name (ERS457530).
 	String read_file_basename = basename(fastq_1)
-	String sample_name = sub(read_file_basename, "_.*", "")
+	String sample = sub(read_file_basename, "_.*", "")
 
     parameter_meta {
         average_qual: "if one read's average quality score <avg_qual, then this read/pair is discarded. 0 means no requirement"
@@ -84,17 +84,17 @@ task fastp_and_parse {
     }
 
     command <<<
-    fastp --in1 "~{fastq_1}" --in2 "~{fastq_2}" --out1 "~{sample_name}_fastp_1.fq" --out2 "~{sample_name}_fastp_2.fq" \
+    fastp --in1 "~{fastq_1}" --in2 "~{fastq_2}" --out1 "~{sample}_fastp_1.fq" --out2 "~{sample}_fastp_2.fq" \
         --average_qual ~{average_qual} \
-        --html "~{sample_name}_fastp.html" --json "~{sample_name}_fastp.json" "~{arg_adapter_trimming}"
+        --html "~{sample}_fastp.html" --json "~{sample}_fastp.json" "~{arg_adapter_trimming}"
     
     # parse fastp outputs from JSON
     python3 << CODE
     import os
     import json
-    with open("~{sample_name}_fastp.json", "r") as fastpJSON:
+    with open("~{sample}_fastp.json", "r") as fastpJSON:
         fastp = json.load(fastpJSON)
-    with open("~{sample_name}_fastp.txt", "w") as outfile:
+    with open("~{sample}_fastp.txt", "w") as outfile:
         for keys, values in fastp["summary"]["before_filtering"].items():
             outfile.write(f"{keys}\t{values}\n")
         if "~{use_fastps_cleaned_fastqs}" == "true":
@@ -108,8 +108,8 @@ task fastp_and_parse {
     
     # delete fastp cleaned fastqs if we dont want them to save on delocalization time
     if "~{use_fastps_cleaned_fastqs}" == "false":
-        os.remove("~{sample_name}_fastp_1.fq")
-        os.remove("~{sample_name}_fastp_2.fq")
+        os.remove("~{sample}_fastp_1.fq")
+        os.remove("~{sample}_fastp_2.fq")
     
     CODE
     >>>
@@ -126,6 +126,7 @@ task fastp_and_parse {
         File   json_report = glob("*.json")[0]
         File   short_report= glob("*_fastp.txt")[0] # BEFORE filtering
         
+        String sample_name       = sample
         Float  percent_above_q30 = read_float("q30.txt")
         Int    total_reads       = read_int("total_reads.txt")
         
