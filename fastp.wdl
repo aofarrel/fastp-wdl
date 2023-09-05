@@ -50,8 +50,8 @@ task fastp {
     output {
         File html_report = glob("*.html")[0]
         File json_report = glob("*.json")[0]
-        File? very_clean_fastq1 = "~{sample_name}_fastp_1.fq"
-        File? very_clean_fastq2 = "~{sample_name}_fastp_2.fq"
+        File? very_clean_fastq1 = sample_name + "_fastp_1.fq"
+        File? very_clean_fastq2 = sample_name + "_fastp_2.fq"
     }
 
 }
@@ -130,8 +130,8 @@ task fastp_and_parse {
         Float  percent_above_q30 = read_float("q30.txt")
         Int    total_reads       = read_int("total_reads.txt")
         
-        File?  very_clean_fastq1 = "~{sample_name}_fastp_1.fq"
-        File?  very_clean_fastq2 = "~{sample_name}_fastp_2.fq"
+        File?  very_clean_fastq1 = sample + "_fastp_1.fq"
+        File?  very_clean_fastq2 = sample + "_fastp_2.fq"
         
     }
 
