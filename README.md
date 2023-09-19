@@ -1,14 +1,14 @@
 # fastp-wdl
- Partial WDLization of fastp that focuses on the QC reporting aspects of fastp. Currently does not output fastqs -- the idea is that you are using this WDL to get quality information for fastqs that you have already filtered/trimmed/decontaminated.
+ Partial WDLization of fastp that focuses on ease-of-use. Outputs fastp's HTML and JSON reports, and optionally parses those reports for specific information. Optionally outputs cleaned fastqs.
 
 
 ## How does this WDL differ from fastp's defaults?
-First of all, it should be noted fastp is a very efficient tool, but WDL adds a lot of overhead. If you are running on only a few samples on a cloud backend, you will likely spend more time localizing and delocalizing files than you will actually running fastp.
 
 | value                    | WDL  | original | justification                                                                   |
 |--------------------------|------|----------|---------------------------------------------------------------------------------|
 | disable_adaptor_trimming | true | false    | This WDL assumes your reads have already been through Trimmomatic               |
-| disable_trim_poly_g      | true | false    | Alignment with Trimmomatic (may also prevent issues with TB's high GC content?) |
+| disable_trim_poly_g      | true | false    | Alignment with Trimmomatic |
+| output_cleaned_fastqs    | true | n/a      | fastp always generates cleaned fastqs; setting this to false allows a user who only cares about QC reports to save delocalization time by reducing the number of outputs |
 
 
 ## I want different features, has someone else WDLized this?

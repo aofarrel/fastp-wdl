@@ -1,0 +1,14 @@
+version: 1.2
+workflows:
+  - name: fastp_one_sample
+    subclass: WDL
+    primaryDescriptorPath: /wf_fastp_one_sample.wdl
+    readMePath: /README.md
+    authors:
+      - orcid: 0000-0003-4896-1858
+  - name: fastp_many_samples
+    subclass: WDL
+    primaryDescriptorPath: /wf_fastp_many_samples.wdl
+    readMePath: /README.md
+    authors:
+      - orcid: 0000-0003-4896-1858

@@ -7,7 +7,7 @@ task fastp {
 
         Int average_qual = 30
         Boolean disable_adaptor_trimming = true
-        Boolean use_fastps_cleaned_fastqs = true
+        Boolean output_cleaned_fastqs = true
 
         Int cpu = 4
         Int preempt = 1
@@ -24,7 +24,7 @@ task fastp {
     parameter_meta {
         average_qual: "if one read's average quality score <avg_qual, then this read/pair is discarded. 0 means no requirement"
         disable_adaptor_trimming: "disable trimming adaptors; use this if your reads already went through trimmomatic"
-        use_fastps_cleaned_fastqs: "[WDL only] if true, output fastps' cleaned fastqs as task-level outputs"
+        output_cleaned_fastqs: "[WDL only] if true, output fastps' cleaned fastqs as task-level outputs"
     }
 
     command <<<
@@ -33,7 +33,7 @@ task fastp {
         --html "~{sample_name}_fastp.html" --json "~{sample_name}_fastp.json" "~{arg_adapter_trimming}"
     
     # delete fastp cleaned fastqs if we dont want them to save on delocalization time
-    if [ "~{use_fastps_cleaned_fastqs}" == "false" ]
+    if [ "~{output_cleaned_fastqs}" == "false" ]
     then
         rm "~{sample_name}_fastp_1.fq"
         rm "~{sample_name}_fastp_2.fq"
@@ -63,7 +63,7 @@ task fastp_and_parse {
 
         Int average_qual = 30
         Boolean disable_adaptor_trimming = true
-        Boolean use_fastps_cleaned_fastqs = true
+        Boolean output_cleaned_fastqs = true
 
         Int cpu = 4
         Int preempt = 1
@@ -80,7 +80,7 @@ task fastp_and_parse {
     parameter_meta {
         average_qual: "if one read's average quality score <avg_qual, then this read/pair is discarded. 0 means no requirement"
         disable_adaptor_trimming: "disable trimming adaptors; use this if your reads already went through trimmomatic"
-        use_fastps_cleaned_fastqs: "[WDL only] if true, output fastps' cleaned fastqs as task-level outputs"
+        output_cleaned_fastqs: "[WDL only] if true, output fastps' cleaned fastqs as task-level outputs"
     }
 
     command <<<
@@ -97,7 +97,7 @@ task fastp_and_parse {
     with open("~{sample}_fastp.txt", "w") as outfile:
         for keys, values in fastp["summary"]["before_filtering"].items():
             outfile.write(f"{keys}\t{values}\n")
-        if "~{use_fastps_cleaned_fastqs}" == "true":
+        if "~{output_cleaned_fastqs}" == "true":
             outfile.write("after fastp cleaned the fastqs:\n")
             for keys, values in fastp["summary"]["after_filtering"].items():
                 outfile.write(f"{keys}\t{values}\n")
@@ -107,7 +107,7 @@ task fastp_and_parse {
     with open("total_reads.txt", "w") as read_count: read_count.write(str(fastp["summary"]["before_filtering"]["total_reads"]))              
     
     # delete fastp cleaned fastqs if we dont want them to save on delocalization time
-    if "~{use_fastps_cleaned_fastqs}" == "false":
+    if "~{output_cleaned_fastqs}" == "false":
         os.remove("~{sample}_fastp_1.fq")
         os.remove("~{sample}_fastp_2.fq")
     
@@ -135,16 +135,4 @@ task fastp_and_parse {
         
     }
 
-}
-
-workflow fastp_simple_wf {
-    input {
-        Array[File] fastq_pair
-    }
-    
-    call fastp {
-        input:
-            fastq_1 = fastq_pair[0],
-            fastq_2 = fastq_pair[1]
-    }
 }
