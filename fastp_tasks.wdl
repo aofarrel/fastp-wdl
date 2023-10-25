@@ -103,8 +103,12 @@ task fastp_and_parse {
                 outfile.write(f"{keys}\t{values}\n")
         else:
             outfile.write("fastp cleaning was skipped, so the above represent the final result of these fastqs.")
-    with open("q30.txt", "w") as q30_rate: q30_rate.write(str(fastp["summary"]["before_filtering"]["q30_rate"]))
-    with open("total_reads.txt", "w") as read_count: read_count.write(str(fastp["summary"]["before_filtering"]["total_reads"]))              
+    with open("q20_in.txt", "w") as q20_in: q20_in.write(str(fastp["summary"]["before_filtering"]["q20_rate"]))
+    with open("q20_out.txt", "w") as q20_out: q20_out.write(str(fastp["summary"]["after_filtering"]["q20_rate"]))
+    with open("q30_in.txt", "w") as q30_in: q30_in.write(str(fastp["summary"]["before_filtering"]["q30_rate"]))
+    with open("q30_out.txt", "w") as q30_out: q30_out.write(str(fastp["summary"]["after_filtering"]["q30_rate"]))
+    with open("reads_in.txt", "w") as reads_in: reads_in.write(str(fastp["summary"]["before_filtering"]["total_reads"])) 
+    with open("reads_out.txt", "w") as reads_out: reads_out.write(str(fastp["summary"]["after_filtering"]["total_reads"]))
     
     # delete fastp cleaned fastqs if we dont want them to save on delocalization time
     if "~{output_cleaned_fastqs}" == "false":
@@ -127,8 +131,12 @@ task fastp_and_parse {
         File   short_report= glob("*_fastp.txt")[0] # BEFORE filtering
         
         String sample_name       = sample
-        Float  percent_above_q30 = read_float("q30.txt")
-        Int    total_reads       = read_int("total_reads.txt")
+        Float  in_percent_above_q20 = read_float("q20_in.txt")
+        Float  in_percent_above_q30 = read_float("q30_in.txt")
+        Int    in_total_reads       = read_int("reads_in.txt")
+        Float  out_percent_above_q20 = if output_cleaned_fastqs then read_float("q20_out.txt") else read_float("q20_in.txt")
+        Float  out_percent_above_q30 = if output_cleaned_fastqs then read_float("q30_out.txt") else read_float("q30_in.txt")
+        Int    out_total_reads       = if output_cleaned_fastqs then read_int("reads_out.txt") else read_int("reads_in.txt")
         
         File?  very_clean_fastq1 = sample + "_fastp_1.fq"
         File?  very_clean_fastq2 = sample + "_fastp_2.fq"
