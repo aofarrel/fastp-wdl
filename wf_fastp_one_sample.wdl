@@ -16,12 +16,12 @@ workflow fastp_one_sample {
     }
     
     output {
-        File?  cleaned_fastq1    = fastp_and_parse.very_clean_fastq1
-        File?  cleaned_fastq2    = fastp_and_parse.very_clean_fastq2
-        File   html_report       = fastp_and_parse.html_report
-        File   json_report       = fastp_and_parse.json_report
-        Float  percent_above_q30 = fastp_and_parse.percent_above_q30
-        String sample_name       = fastp_and_parse.sample_name
-        Int    total_reads       = fastp_and_parse.total_reads
+        File?  cleaned_fastq1        = fastp_and_parse.very_clean_fastq1
+        File?  cleaned_fastq2        = fastp_and_parse.very_clean_fastq2
+        File   html_report           = fastp_and_parse.html_report
+        File   json_report           = fastp_and_parse.json_report
+        Float  out_percent_above_q30 = fastp_and_parse.out_percent_above_q30
+        String sample_name           = fastp_and_parse.sample_name
+        Int    out_total_reads       = fastp_and_parse.out_total_reads
     }
 }
