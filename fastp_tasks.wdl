@@ -12,7 +12,7 @@ task fastp_and_parse {
 		Int cpu = 4
 		Int preempt = 1
 	}
-	Int disk_size = 2*ceil(size(fastq_1, "GB")) + 1
+	Int disk_size = 5*ceil(size(fastq_1, "GB")) + 1
 	String arg_adapter_trimming = if(disable_adaptor_trimming) then "--disable_adapter_trimming" else ""
 	
 	# This needs to be to handle inputs like sample+run+num (ERS457530_ERR551697_1.fastq)
@@ -101,7 +101,7 @@ task fastp_simple {
 		Int cpu = 4
 		Int preempt = 1
 	}
-	Int disk_size = 2*ceil(size(fastq_1, "GB")) + 1
+	Int disk_size = 5*ceil(size(fastq_1, "GB")) + 1
 	String arg_adapter_trimming = if(disable_adaptor_trimming) then "--disable_adapter_trimming" else ""
 	
 	# This needs to be to handle inputs like sample+run+num (ERS457530_ERR551697_1.fastq)
