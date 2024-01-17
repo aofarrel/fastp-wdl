@@ -12,7 +12,7 @@ task fastp_simple {
 		Int cpu = 4
 		Int preempt = 1
 	}
-	Int disk_size = 5*ceil(size(fastq_1, "GB")) + 1
+	Int disk_size = 6
 	
 	# This needs to be to handle inputs like sample+run+num (ERS457530_ERR551697_1.fastq)
 	# or inputs like sample+num (ERS457530_1.fastq). In both cases, we want to convert to just
@@ -68,7 +68,7 @@ task fastp_and_parse {
 		Int cpu = 4
 		Int preempt = 1
 	}
-	Int disk_size = 5*ceil(size(fastq_1, "GB")) + 1
+	Int disk_size = 6
 	
 	# This needs to be to handle inputs like sample+run+num (ERS457530_ERR551697_1.fastq)
 	# or inputs like sample+num (ERS457530_1.fastq). In both cases, we want to convert to just
@@ -156,7 +156,7 @@ task merge_then_fastp {
 		Int cpu = 4
 		Int preempt = 1
 	}
-	Int disk_size = 5*ceil(size(reads_files, "GB")) + 1
+	Int disk_size = 6
 	
 	# This needs to be to handle inputs like sample+run+num (ERS457530_ERR551697_1.fastq)
 	# or inputs like sample+num (ERS457530_1.fastq). In both cases, we want to convert to just
